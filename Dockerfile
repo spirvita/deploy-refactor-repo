@@ -112,7 +112,6 @@ RUN set -eux; \
     && echo ""  >> /root/.bashrc
 
 
-
 ##############################
 # Setup make auto completion
 ##############################
@@ -146,12 +145,6 @@ WORKDIR /work
 ##############################
 COPY .env package.json bin public src ./
 RUN pnpm install
-
-##############################
-# Install pm2
-##############################
-
-RUN npm install -g pm2
 
 ##############################
 # Setup container listen port
