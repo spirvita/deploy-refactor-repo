@@ -111,11 +111,7 @@ RUN set -eux; \
     && echo "export PATH=$PATH:${PNPM_HOME}" >> /root/.bashrc \
     && echo ""  >> /root/.bashrc
 
-##############################
-# Install pm2
-##############################
 
-RUN pnpm add -g pm2
 
 ##############################
 # Setup make auto completion
@@ -149,7 +145,13 @@ WORKDIR /work
 # Copy the node application source code
 ##############################
 COPY .env package.json bin public src ./
-RUN pnpm install 
+RUN pnpm install
+
+##############################
+# Install pm2
+##############################
+
+RUN pnpm add -g pm2
 
 ##############################
 # Setup container listen port
