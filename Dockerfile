@@ -112,54 +112,10 @@ RUN set -eux; \
     && echo ""  >> /root/.bashrc
 
 ##############################
-# Install Yarn
+# Install pm2
 ##############################
 
-ARG buildtime_YARN_VERSION='1.22.22'
-ENV YARN_VERSION=${buildtime_YARN_VERSION}
-RUN curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /usr/share/keyrings/yarn-keyring.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/yarn-keyring.gpg] https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && apt-get update -y || true \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y yarn=${YARN_VERSION}-1
-
-##############################
-# Install Go
-##############################
-
-ARG buildtime_GOLANG_VERSION='1.20.3'
-ENV GOLANG_VERSION=${buildtime_GOLANG_VERSION}
-RUN set -eux; \
-    LOWER_ARCH=$(dpkg --print-architecture); \
-    curl -LO https://go.dev/dl/go${GOLANG_VERSION}.linux-${LOWER_ARCH}.tar.gz \
-    && tar -zxvf go${GOLANG_VERSION}.linux-${LOWER_ARCH}.tar.gz -C /usr/local/ \
-    && rm -rf go${GOLANG_VERSION}.linux-${LOWER_ARCH}.tar.gz \
-    && echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
-
-##############################
-# Install gum
-# Reference: https://github.com/charmbracelet/gum
-##############################
-
-ARG buildtime_GUM_VERSION='0.13.0'
-ENV GUM_VERSION=${buildtime_GUM_VERSION}
-
-RUN set -eux; \
-    LOWER_ARCH=$(dpkg --print-architecture); \
-    case "${LOWER_ARCH}" in \
-    amd64) \
-      curl -LO https://github.com/charmbracelet/gum/releases/download/v${GUM_VERSION}/gum_${GUM_VERSION}_Linux_x86_64.tar.gz \
-      && tar -zxvf gum_${GUM_VERSION}_Linux_x86_64.tar.gz --strip-components=1 -C /usr/local/bin gum_${GUM_VERSION}_Linux_x86_64/gum \
-      && chmod +x /usr/local/bin/gum \
-      && rm -rf gum_${GUM_VERSION}_Linux_x86_64.tar.gz; \
-    ;; \
-    arm64) \
-      curl -LO https://github.com/charmbracelet/gum/releases/download/v${GUM_VERSION}/gum_${GUM_VERSION}_Linux_arm64.tar.gz \
-      && tar -zxvf gum_${GUM_VERSION}_Linux_arm64.tar.gz --strip-components=1 -C /usr/local/bin gum_${GUM_VERSION}_Linux_arm64/gum \
-      && chmod +x /usr/local/bin/gum \
-      && rm -rf gum_${GUM_VERSION}_Linux_arm64.tar.gz; \
-    ;; \
-    *) echo >&2 "Unsupported architecture: $LOWER_ARCH"; exit 1; \
-    esac
+RUN pnpm add -g pm2
 
 ##############################
 # Setup make auto completion
