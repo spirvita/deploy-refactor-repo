@@ -151,7 +151,7 @@ RUN pnpm install
 # Install pm2
 ##############################
 
-RUN /usr/local/bin/pnpm add -g pm2
+RUN npm insatll -g pm2
 
 ##############################
 # Setup container listen port
