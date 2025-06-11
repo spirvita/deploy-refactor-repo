@@ -37,20 +37,26 @@ jobs:
                 echo "資料庫 ${dbname} 不存在"
               fi
             }
-          
+  
             echo "🔍 檢查目前 PM2 執行中的應用列表..."
             docker exec -i demo-backend-amd64 /pnpm/pm2 list
 
+            echo "==============================================================================="
             echo "📦 開始安裝 PNPM 相依套件..."
             docker exec -i demo-backend-amd64 /usr/local/bin/pnpm install
             echo "✅ PNPM 相依套件安裝完成。"
 
+            echo "==============================================================================="
             echo "� 開始檢查資料庫狀態..."
             check_db_exists "${DB_DATABASE_TEST}"
 
+            echo "==============================================================================="
             echo "資料庫 migration..."
             docker exec -i demo-backend-amd64 pnpm migration:run
 
+            echo "==============================================================================="
             echo "🟢 重啟 PM2 中名為 api 的應用..."
             docker exec -i demo-backend-amd64 /pnpm/pm2 restart api
+
+            echo "==============================================================================="
             echo "🚀 Deploy complete"
